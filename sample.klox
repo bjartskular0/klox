@@ -1,0 +1,31 @@
+class MyClass {
+    init(mead) {
+        this.mead = mead;
+        print "Initialized with mead?";
+        if (this.mead) {
+            print "YES";
+        } else {
+            print "NO";
+        }
+    }
+}
+
+MyClass(true);
+MyClass(false);
+
+var myVar = 3 == 4;
+
+print myVar;
+
+if (myVar) {
+    print "Woo";
+else {
+    print "Boo";
+}
+
+math(3);
+
+fun math(a) {
+    print "Hellow World! +" + a;
+    print 3+1;
+}
