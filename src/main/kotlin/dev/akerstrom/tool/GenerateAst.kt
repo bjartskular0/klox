@@ -32,19 +32,32 @@ fun defineAst(outputDir: String, baseName: String, types: List<String>) {
     File(path).printWriter().use { out ->
         out.println("package dev.akerstrom.klox")
         out.println()
-        out.println("sealed class $baseName")
+        out.println("sealed class $baseName {")
+        out.println("    abstract fun <R> accept(visitor: Visitor<R>): R")
+        out.println("}")
+        defineVisitor(out, baseName, types)
         out.println()
 
         // The AST classes.
         for (type in types) {
-
-            val sp = type.split(":", limit = 2)
-            val (className, fields) = sp.map { it.trim() }
-            out.println("data class $className($fields) : $baseName()")
+            // Only split on first occurrence of ':'
+            val (className, fields) = type.split(":", limit = 2).map { it.trim() }
+            defineType(out, baseName, className, fields)
         }
     }
 }
 
+fun defineVisitor(out: PrintWriter, baseName: String, types: List<String>) {
+    out.println("sealed interface Visitor<R> {")
+    for (type in types) {
+        val typeName = type.split(":")[0].trim()
+        out.println("    fun visit$typeName$baseName(${baseName.lowercase()}: $typeName): R")
+    }
+    out.println("}")
+}
+
 fun defineType(out: PrintWriter, baseName: String, className: String, fieldList: String) {
-    out.println("data class $className($fieldList) : $baseName()")
+    out.println("data class $className($fieldList) : $baseName() {")
+    out.println("    override fun <R> accept(visitor: Visitor<R>) = visitor.visit$className$baseName(this)")
+    out.println("}")
 }
