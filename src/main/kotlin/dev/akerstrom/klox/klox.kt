@@ -5,7 +5,9 @@ import java.io.File
 import java.io.InputStreamReader
 import kotlin.system.exitProcess
 
+private val interpreter = Interpreter
 var hadError = false
+var hadRuntimeError = false
 
 fun main(args: Array<String>) {
     if (args.size > 1) {
@@ -20,10 +22,11 @@ fun main(args: Array<String>) {
 
 fun runFile(path: String) {
     val text = File(path).readText()
-    run (text)
+    run(text)
 
     // Indicate an error in the exit code
     if (hadError) exitProcess(65)
+    if (hadRuntimeError) exitProcess(70)
 }
 
 // REPL
@@ -44,14 +47,17 @@ fun run(source: String) {
     val tokens = scanner.scanTokens()
 
     val parser = Parser(tokens)
-    val expression = parser.parse()
+    val statements = parser.parse()
 
     println("hadError: $hadError")
 
+    // Stop if there was a syntax error.
     if (hadError) return
 
     // Bang-bang is fine because expression should only be null when hadError is true
-    println(AstPrinter().print(expression!!))
+    // println(AstPrinter().print(expression!!))
+
+    interpreter.interpret(statements)
 }
 
 fun error(line: Int, message: String) {
@@ -69,4 +75,9 @@ fun error(token: Token, message: String) {
     } else {
         report(token.line, " at '${token.lexeme}'", message)
     }
+}
+
+fun runtimeError(error: RuntimeError) {
+    println("${error.message}\n[line ${error.token.line}]")
+    hadRuntimeError = true
 }
