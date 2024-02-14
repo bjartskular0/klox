@@ -5,7 +5,6 @@ print 4 + 3;
 print 3 * 5;
 print 4 * 3 - 4 + 3 * 5;
 
-var myVar = 3 == 4;
 
 var a = "global a";
 var b = "global b";
@@ -27,14 +26,57 @@ print a;
 print b;
 print c;
 
+var myVar = (3 == 4);
+
 print myVar;
-//
-//if (myVar) {
-//    print "Woo";
-//else {
-//    print "Boo";
-//}
-//
+
+if (myVar) {
+    print "Woo";
+} else {
+    print "Boo";
+}
+
+fun math(a) {
+    print "Hewwo Wowd! +";
+    print a;
+    print 3+1;
+}
+
+math(3);
+
+print math;
+
+////
+fun fib(n) {
+  if (n <= 1) return n;
+  return fib(n - 2) + fib(n - 1);
+}
+
+var timeA = clock();
+
+for (var i = 0; i < 10; i = i + 1) {
+  print fib(i);
+}
+
+print clock() - timeA;
+////
+
+////
+fun makeCounter() {
+  var i = 0;
+  fun count() {
+    i = i + 1;
+    print i;
+  }
+
+  return count;
+}
+
+var counter = makeCounter();
+counter(); // "1".
+counter(); // "2".
+////
+
 //class MyClass {
 //    init(mead) {
 //        this.mead = mead;
@@ -51,9 +93,3 @@ print myVar;
 //MyClass(false);
 //
 //
-//math(3);
-//
-//fun math(a) {
-//    print "Hellow World! +" + a;
-//    print 3+1;
-//}
